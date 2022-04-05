@@ -28,7 +28,39 @@ library(openxlsx)
 # Census API key - only need to install once
 # census_api_key("1b6b78f60660a226f7b5b0f899ba14e4b8a52e35", install = TRUE)
 
-# tracts for analysis (along R48) ============================================
+
+# available vars  =============================================================
+vars <- load_variables(2020, "acs5")
+vars_subject <- load_variables(2020, "acs5/subject")
+vars_profile <- load_variables(2020, "acs5/profile")
+
+# LIST OF MAPS ===========================================================
+
+# Race (POC)
+# income
+# language
+# disability status
+# vehicle access
+
+
+# Data	Tables
+# Age	DP05 – 2020 ACS 5-year estimate
+# Sex	DP05 – 2020 ACS 5-year estimate
+# Race and ethnicity	DP05 – 2020 ACS 5-year estimate
+# Income	S1901, S1701 – 2020 ACS 5-year estimate
+# Languages spoken at home	B16001 – 2015 ACS 5-year estimate
+# Disability status	S1810 – 2020 ACS 5-year estimate
+# Internet access	S2801 – 2020 ACS 5-year estimate
+# Vehicle access	DP04 – 2020 ACS 5-year estimate
+# Housing tenure	DP04 – 2020 ACS 5-year estimate
+
+# colors -
+# Primary: RGB 22/145/208
+# Secondary: RGB 225/217/30 
+# Tertiary: RGB 128/130/132
+# Four: RGB 0/168/93
+
+# tracts for analysis (along R48) NOT CONFIRMED ============================================
 tracts_r48 <- c(
   "Census Tract 88, King County, Washington",
   "Census Tract 76, King County, Washington",
@@ -53,8 +85,8 @@ tracts_r48 <- c(
 )	
 
 
-# available vars  =============================================================
-vars2 <- load_variables(2020, "acs5/subject")
+
+# 
 
 # test code ===================================================================
 
@@ -134,28 +166,3 @@ king_race_qc <- spread(king_race_perc[,1:3, drop = TRUE], variable, race_percent
 #            colNames = TRUE, rowNames = TRUE, append = FALSE, overwrite = TRUE)
            
 
-# FINAL MAPS =========================
-
-# Race (POC)
-# income
-# language
-# disability status
-# vehicle access
-
-# 
-# Characteristic	Table
-# Age	DP05 – 2020 ACS 5-year estimate
-# Sex	DP05 – 2020 ACS 5-year estimate
-# Race and ethnicity	DP05 – 2020 ACS 5-year estimate
-# Income	S1901, S1701 – 2020 ACS 5-year estimate
-# Languages spoken at home	B16001 – 2015 ACS 5-year estimate
-# Disability status	S1810 – 2020 ACS 5-year estimate
-# Internet access	S2801 – 2020 ACS 5-year estimate
-# Vehicle access	DP04 – 2020 ACS 5-year estimate
-# Housing tenure	DP04 – 2020 ACS 5-year estimate
-
-# colors -
-# Primary: RGB 22/145/208
-# Secondary: RGB 225/217/30 
-# Tertiary: RGB 128/130/132
-# Four: RGB 0/168/93
