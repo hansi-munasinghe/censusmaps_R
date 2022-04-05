@@ -86,7 +86,36 @@ tracts_r48 <- c(
 
 
 
-# 
+# VEHICLE USE ================================================================
+# Vehicle access	DP04 – 2020 ACS 5-year estimate (from Emma)
+# var -DP04_0058P	Percent!!VEHICLES AVAILABLE!!Occupied housing units!!No vehicles av
+
+king_vehicles <- get_acs(
+  geography = "tract",
+  state = "WA",
+  county = "King",
+  geometry = TRUE,
+  variables = c(novehicle_perc = "DP04_0058P"),
+ # summary_var =  # denominator 
+)
+
+# interactive mapview
+mapview(king_vehicles)
+
+# select tracts on route 
+r48_veh <- king_vehicles %>%
+  filter(NAME %in% tracts_r48)
+
+# viz
+ggplot(r48_veh, aes(fill= estimate))+
+  geom_sf() +
+  theme_void() +
+  labs(title = "% of households with no vehicles along Route 48") +
+  scale_fill_gradientn(colours = c("azure3", "deepskyblue4")) 
+
+
+
+
 
 # test code ===================================================================
 
