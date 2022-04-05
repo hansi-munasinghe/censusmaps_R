@@ -154,7 +154,7 @@ king_race_qc <- spread(king_race_perc[,1:3, drop = TRUE], variable, race_percent
 # Vehicle access	DP04 – 2020 ACS 5-year estimate
 # Housing tenure	DP04 – 2020 ACS 5-year estimate
 
-
+# colors -
 # Primary: RGB 22/145/208
 # Secondary: RGB 225/217/30 
 # Tertiary: RGB 128/130/132
