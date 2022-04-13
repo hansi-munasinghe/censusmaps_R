@@ -38,9 +38,9 @@ vars_profile <- load_variables(2020, "acs5/profile")
 
 # Race (POC)
 # income
-# language
-# disability status
-# vehicle access
+# language - test map done
+# disability status - test map done
+# vehicle access  - test map done
 
 
 # Data	Tables
@@ -84,7 +84,80 @@ tracts_r48 <- c(
   "Census Tract 90, King County, Washington"
 )	
 
+# LANGUAGES ==============================================================
+# var from Emma - # Languages spoken at home	B16001 – 2015 ACS 5-year estimate
 
+# SPEAK ENGLISH LESS THAN VERY WELL
+# var from tidycensus - 
+# B16001_005 Estimate!!Total:!!Spanish:!!Speak English less than "very well"
+# B99163_003	Estimate!!Total:!!Speak other languages:	ALLOCATION OF ABILITY TO SPEAK ENGLISH FOR THE POPULATION 5 YEARS AND OVER
+# not available - summary_var = "B99163_001"  #	ALLOCATION OF ABILITY TO SPEAK ENGLISH FOR THE POPULATION 5 YEARS AND OVER
+# C16002_001	Estimate!!Total:	HOUSEHOLD LANGUAGE BY HOUSEHOLD LIMITED ENGLISH SPEAKING STATUS
+
+
+king_limeng <- 
+  get_acs(
+    geography = "tract",
+    state = "WA",
+    county = "King",
+    geometry = TRUE,
+    variables =  c(limeng_est = "C16002_001"), #estimate, not % #  mutate(_perc = 100 * (estimate / summary_est))
+  ) %>%
+  filter(!row_number() %in% c(398)) %>%
+  filter(NAME %in% tracts_r48) 
+
+tm_shape(king_limeng, 
+         projection = sf::st_crs(26915)) + 
+  tm_polygons() + 
+  tm_bubbles(size = "estimate", alpha = 0.5, 
+             #size.max=max(king_limeng$estimate)/2,
+             scale = 1,
+             col = "blue",
+             breaks=c(-Inf, seq(0, 3000, by=500), Inf),
+             title.size = "Limited English Households, ACS estimate") + 
+  tm_layout(legend.outside = TRUE,
+            legend.outside.position = "bottom")
+
+
+# tm_shape(king_limeng, 
+#          projection = sf::st_crs(26915)) + 
+#   tm_polygons() + 
+#   tm_dots(size = "estimate", alpha = 0.5, 
+#              #size.max=max(king_limeng$estimate)/2,
+#              scale = 1,
+#              col = "blue",
+#              breaks=c(-Inf, seq(0, 3000, by=500), Inf),
+#              title.size = "Limited English Households, ACS estimate") + 
+#   tm_layout(legend.outside = TRUE,
+#             legend.outside.position = "bottom")
+
+
+# DISABILITY ===============================================================
+# var from Emma - Disability status	S1810 – 2020 ACS 5-year estimate
+# var from tidycensus - S1810_C02_001	Estimate!!With a disability!!Total civilian noninstitutionalized population	
+# summary_var =  S1810_C01_001	Estimate!!Total!!Total civilian noninstitutionalized population
+
+king_disability <- 
+  get_acs(
+    geography = "tract",
+    state = "WA",
+    county = "King",
+    geometry = TRUE,
+    variables = c(disability_est = "S1810_C02_001"),
+    summary_var =  "S1810_C01_001" #	Estimate!!Total!!Total civilian noninstitutionalized population
+  ) %>%
+  mutate(disability_perc = 100 * (estimate / summary_est))
+
+# select tracts on route 
+r48_disability <- king_disability %>%
+  filter(NAME %in% tracts_r48)
+
+# viz
+ggplot(r48_disability, aes(fill= disability_perc))+
+  geom_sf() +
+  theme_void() +
+  labs(title = "% with a disability along Route 48") +
+  scale_fill_gradientn(colours = c("azure3", "deepskyblue4")) 
 
 # VEHICLE USE ================================================================
 # Vehicle access	DP04 – 2020 ACS 5-year estimate (from Emma)
@@ -96,8 +169,7 @@ king_vehicles <- get_acs(
   county = "King",
   geometry = TRUE,
   variables = c(novehicle_perc = "DP04_0058P"),
- # summary_var =  # denominator 
-)
+  )
 
 # interactive mapview
 mapview(king_vehicles)
@@ -114,7 +186,7 @@ ggplot(r48_veh, aes(fill= estimate))+
   scale_fill_gradientn(colours = c("azure3", "deepskyblue4")) 
 
 
-
+#STOP
 
 
 # test code ===================================================================
